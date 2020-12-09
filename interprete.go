@@ -26,23 +26,31 @@ func interpretar() {
 func leerComando(comando string) {
 	var commandArray []string
 	commandArray = strings.Split(comando, " ")
+	fmt.Println(comando)
 	ejecutarComando(commandArray)
 }
 
 func ejecutarComando(commandArray []string) {
 
 	comando := strings.ToLower(commandArray[0])
+	//fmt.Println(comando)
 	switch comando {
 	case "exec":
 		exec(commandArray)
 		break
 	case "pause":
-	case "pause\n":
+		fmt.Println("se pauso")
 		pause()
 		break
-	case "#":
+	case "pause\n":
+		fmt.Println("se pauso")
+		pause()
+		break
+	case "mkdisk":
+		mkdisk(commandArray)
 		break
 	default:
 		printError("!!Comando incorrecto!!")
 	}
+
 }

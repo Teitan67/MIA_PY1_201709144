@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"strings"
 )
 
 func main() {
@@ -33,7 +34,30 @@ func leerArchivo(ruta string) string {
 	// convertir el arreglo a string
 	datosComoString := string(datosComoBytes)
 	// imprimir el string
-	fmt.Println(datosComoString)
+	//fmt.Println(datosComoString)
 	//Se imprimen los valores guardados en el struct
 	return datosComoString
 }
+
+type parametro struct {
+	tipo  string
+	valor string
+}
+
+func obtenerParametros(comando []string) [8]parametro {
+	var parametros [8]parametro
+	contadorP := 0
+	if len(comando) > 0 {
+		for i := 1; i < len(comando); i++ {
+			cadenaTemporal := strings.TrimSpace(comando[i])
+			parametrosAux := strings.Split(cadenaTemporal, "->")
+
+			parametros[contadorP] = parametro{strings.ToLower(strings.Split(parametrosAux[0], "-")[1]), parametrosAux[1]}
+			contadorP++
+		}
+		//fmt.Println(parametros)
+	}
+	return parametros
+}
+
+//Mkdisk -Size->3000 -unit->K -path->/home/teitan67/MIA_PY1/bin/Disco1.dsk

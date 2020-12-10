@@ -33,7 +33,7 @@ func leerComando(comando string) {
 func ejecutarComando(commandArray []string) {
 
 	comando := strings.ToLower(commandArray[0])
-	//fmt.Println(comando)
+	//fmt.Println("comando:", comando)
 	switch comando {
 	case "exec":
 		exec(commandArray)
@@ -58,8 +58,10 @@ func ejecutarComando(commandArray []string) {
 	case "rep":
 		rep(commandArray)
 		break
+	case "":
+		break
 	default:
-		printError("!!Comando incorrecto!!")
+		printError("!!Comando incorrecto ," + comando + "!! ")
 	}
 
 }

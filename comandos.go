@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unsafe"
 )
 
 func pause() {
@@ -96,28 +97,21 @@ func mkdisk(commandArray []string) {
 	for i := 0; i < size; i++ {
 		escribirBytes(file, binario.Bytes())
 	}
-	particionGenerica := particion{false, "", "", 0, 0, ""}
+
 	fecha := time.Now().Format(time.RFC822)
 	fmt.Println("Creando mbr, fecha obtenida ", fecha, "...")
-	mbrDisco := mbr{size, fecha, rand.Intn(1000), fit, particionGenerica, particionGenerica, particionGenerica, particionGenerica}
+	mbrDisco := mbr{}
+	mbrDisco.Fit = strToBts(fit)
+	mbrDisco.Fecha = strToBts(fecha)
+	mbrDisco.Tamano = int64(size)
+	mbrDisco.ID = int64(rand.Intn(4000) + 1000)
 	//fmt.Println(mbrDisco)
 	escribirDisco(path, mbrDisco)
 
-	fmt.Println("Disco creado exitosamente...")
+	fmt.Println("Disco creado exitosamente...", fit)
 
 }
 
-/*
-type particion struct {
-	status bool
-	tipo   string
-	fit    string
-	start  int
-	size   int
-	name   string
-}
-
-*/
 func escribirDisco(path string, mbrDisco mbr) {
 	fmt.Println("Escribiendo en el disco...")
 	file, err := os.OpenFile(path, os.O_RDWR, 0777)
@@ -163,7 +157,7 @@ func rmdisk(commandArray []string) {
 func fdisk(commandArray []string) {
 	//Atributos
 	//solo 4 particiones, 1 extendida por disco
-	size := ""
+	size := 0
 	unit := "K"
 	path := ""
 	tipo := "P"
@@ -183,7 +177,11 @@ func fdisk(commandArray []string) {
 			//fmt.Println("Tipo:", parametroAux.tipo, " Valor:", parametroAux.valor)
 			switch parametroAux.tipo {
 			case "size":
-				size = parametroAux.valor
+				i, err := strconv.Atoi(parametroAux.valor)
+				if err != nil {
+					printError(err.Error())
+				}
+				size = i
 				break
 			case "unit":
 				unit = parametroAux.valor
@@ -209,8 +207,37 @@ func fdisk(commandArray []string) {
 			}
 		}
 	}
-	//fmt.Println(parametros)
 	fmt.Println(size, unit, path, tipo, fit, delete, name, add)
+	if size > 0 {
+		mbrActual := leerDisco(path)
+		particionA := mbrActual.Particion1
+		particionB := mbrActual.Particion2
+		particionC := mbrActual.Particion3
+		particionD := mbrActual.Particion4
+		if particionA.Size == 0 &&
+			particionB.Size == 0 &&
+			particionC.Size == 0 &&
+			particionD.Size == 0 {
+
+			//Obtenemos el size del mbr y desde alli comenzara la nueva particion
+			mbrAux := mbr{}
+			var inicio int64 = int64(unsafe.Sizeof(mbrAux))
+			//Agregamos la informacion de la particion
+
+			particionA.Start = inicio
+			particionA.Fit = strToBts(fit)
+			particionA.Name=
+		} else {
+			printError("No se puede crear la particion " + name)
+		}
+
+	} else {
+		printError("Size posee un valor incorrecto para la particion")
+	}
+	/*
+		Abrimos el disco y obtenemos su mbr
+		revisamos las 4 particiones y buscamos cual es la del indice mas cercano
+	*/
 
 }
 
@@ -260,3 +287,7 @@ func rep(commandArray []string) {
 rep -id->vda1 -Path->/home/user/reports/reporte1.jpg -name->mbr
 rep -id->vda2 -Path->/home/user/reports/reporte2.pdf -name->disk
 */
+
+func nuevaParticionPrimaria(name[25]byte,size int64,start int64,tipo [25]byte,fit [25]byte,status bool,unidad string){
+
+}

@@ -1,11 +1,14 @@
 package main
 
 import (
+	"bytes"
+	"encoding/binary"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"strings"
+	"unsafe"
 )
 
 func main() {
@@ -85,4 +88,60 @@ func escribirBytes(file *os.File, bytes []byte) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func leerDisco(path string) mbr {
+	fmt.Println("Leyendo disco...")
+
+	file, err := os.Open(path)
+	defer file.Close()
+	if err != nil {
+		printError(err.Error())
+	}
+
+	//Creamos una variable temporal que nos ayudará a leer los productos
+	mbrAux := mbr{}
+	//obtenemor el size del producto para saber cuantos bytes leer
+	var size int = int(unsafe.Sizeof(mbrAux))
+	var posSiguiente int64 = 0
+
+	fmt.Println("=====================Contenido============================")
+
+	file.Seek(posSiguiente, 0)
+	mbrAux = obtenerMbr(file, size, mbrAux)
+
+	fmt.Println(mbrAux.Particion1)
+	defer file.Close()
+	return mbrAux
+}
+
+func obtenerMbr(file *os.File, size int, mbrAux mbr) mbr {
+	data := leerBytes(file, size)
+	buffer := bytes.NewBuffer(data)
+	err := binary.Read(buffer, binary.BigEndian, &mbrAux)
+	if err != nil {
+		printError("Lectura de binario fallida \n" + err.Error())
+	}
+	return mbrAux
+}
+
+func leerBytes(file *os.File, number int) []byte {
+	bytes := make([]byte, number)
+
+	_, err := file.Read(bytes)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return bytes
+}
+
+func strToBts(str string) [25]byte {
+	var bts [25]byte
+	copy(bts[:], str)
+	return bts
+}
+func btsToStr(bts [25]byte) string {
+	var str string
+	str = string(bts[:])
+	return str
 }

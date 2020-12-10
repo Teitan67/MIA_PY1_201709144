@@ -1,24 +1,4 @@
-#Contenido de calificacion.arch
-#Crea tres discos de 30 Mb
-mkdisk -Size->30 -unit->M -path->/home/Disco1.dsk
-mkdisk -unit->K -path->/home/Disco2.dsk -size->30720
-mkDisk -size->30 -patH->/home/archivos/Disco3.dsk
-#Debería dar error
-mkDisk -param->x -size->30 -patH->/home/Disco4.dsk -fit->BF
-#Elimina un disco, el primero debería dar error
-rmDisk -patH->/home/Disco4.dsk
-pause
-rmDisk -patH->/home/archivos/Disco3.dsk
-#Crear particiones
-fdisk -Size->10240 -path->/home/Disco1.dsk -name->Part1
-fdisk -type->E -path->/home/Disco1.dsk -Unit->K -name->Part2 -size->10240
-fdisk -type->L -path->/home/Disco1.dsk -Unit->K -name->Part3 -size->10240
-fdisk -Size->10240 -path->/home/Disco2.dsk -name->Part1
-fdisk -Size->10240 -path->/home/Disco2.dsk -name->Part1
-#Monta las particiones
-mount -path->/home/Disco1.dsk -name->Part1 #id=vda1
-mount -path->/home/Disco2.dsk -name->Part1 #id=vdb1
-mount -path->/home/Disco1.dsk -name->Part2 #id=vda2
-rep -id->vda1 -Path->/home/mia/mbr.jpg -name->mbr
-rep -id->vda1 -Path->/home/mia/disk.jpg -name->disk
+
 #exec -path->/home/teitan67/MIA_PY1/entrada.arch
+mkdisk -Size->1 -unit->M -path->/home/teitan67/MIA_PY1/Disco1.dsk
+fdisk -Size->500 -unit->k -path->/home/teitan67/MIA_PY1/Disco1.dsk -name->Part1

@@ -26,7 +26,7 @@ func interpretar() {
 func leerComando(comando string) {
 	var commandArray []string
 	commandArray = strings.Split(comando, " ")
-	fmt.Println(comando)
+	fmt.Println("\n", comando)
 	ejecutarComando(commandArray)
 }
 
@@ -48,6 +48,15 @@ func ejecutarComando(commandArray []string) {
 		break
 	case "mkdisk":
 		mkdisk(commandArray)
+		break
+	case "rmdisk":
+		rmdisk(commandArray)
+		break
+	case "fdisk":
+		fdisk(commandArray)
+		break
+	case "rep":
+		rep(commandArray)
 		break
 	default:
 		printError("!!Comando incorrecto!!")

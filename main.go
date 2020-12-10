@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
+	"os"
 	"strings"
 )
 
@@ -49,15 +51,38 @@ func obtenerParametros(comando []string) [8]parametro {
 	contadorP := 0
 	if len(comando) > 0 {
 		for i := 1; i < len(comando); i++ {
+
 			cadenaTemporal := strings.TrimSpace(comando[i])
 			parametrosAux := strings.Split(cadenaTemporal, "->")
+			//	fmt.Println(parametrosAux)
+			//	fmt.Println(len(parametrosAux))
+			if len(parametrosAux) == 2 {
+				if len(strings.Split(parametrosAux[0], "-")) == 2 {
+					parametros[contadorP] = parametro{strings.ToLower(strings.Split(parametrosAux[0], "-")[1]), parametrosAux[1]}
+					contadorP++
+				} else {
+					printError("Parece que falta un - en cerca de " + parametrosAux[0])
+				}
 
-			parametros[contadorP] = parametro{strings.ToLower(strings.Split(parametrosAux[0], "-")[1]), parametrosAux[1]}
-			contadorP++
+			} else {
+				printError("Hubo un parametro las escrito cerca de " + parametrosAux[0])
+			}
+			//fdisk -size->10240 -unit->m -path->/home/teitab/12.disk -type->L -fit->ff -delete->full -name->parte2 -add->13
+
 		}
 		//fmt.Println(parametros)
+	} else {
+		printError("Error con el numero de parametros")
 	}
 	return parametros
 }
 
-//Mkdisk -Size->3000 -unit->K -path->/home/teitan67/MIA_PY1/bin/Disco1.dsk
+//Mkdisk -Size->3000 -unit->K -path->/home/teitan67/MIA_PY1/Disco1.dsk
+
+func escribirBytes(file *os.File, bytes []byte) {
+	_, err := file.Write(bytes)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+}

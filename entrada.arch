@@ -1,4 +1,12 @@
 
 #exec -path->/home/teitan67/MIA_PY1/entrada.arch
+rmDisk -path->/home/teitan67/MIA_PY1/Disco1.dsk
 mkdisk -Size->1 -unit->M -path->/home/teitan67/MIA_PY1/Disco1.dsk
+
 fdisk -Size->500 -unit->k -path->/home/teitan67/MIA_PY1/Disco1.dsk -name->Part1
+fdisk -Size->50 -unit->k -path->/home/teitan67/MIA_PY1/Disco1.dsk -name->Part2 -type->e
+fdisk -Size->50 -unit->k -path->/home/teitan67/MIA_PY1/Disco1.dsk -name->Part3 -type->e
+fdisk -Size->50 -unit->k -path->/home/teitan67/MIA_PY1/Disco1.dsk -name->Part4
+fdisk -Size->50 -unit->k -path->/home/teitan67/MIA_PY1/Disco1.dsk -name->Part6
+fdisk -Size->50 -unit->k -path->/home/teitan67/MIA_PY1/Disco1.dsk -name->Part28
+fdisk -Size->50 -unit->k -path->/home/teitan67/MIA_PY1/Disco1.dsk -name->Part281

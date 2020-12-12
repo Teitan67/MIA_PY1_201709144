@@ -26,7 +26,7 @@ func interpretar() {
 func leerComando(comando string) {
 	var commandArray []string
 	commandArray = strings.Split(comando, " ")
-	fmt.Println("\n", comando)
+	printComando("\t" + comando)
 	ejecutarComando(commandArray)
 }
 
@@ -57,6 +57,9 @@ func ejecutarComando(commandArray []string) {
 		break
 	case "rep":
 		rep(commandArray)
+		break
+	case "mount":
+		mount(commandArray)
 		break
 	case "":
 		break
